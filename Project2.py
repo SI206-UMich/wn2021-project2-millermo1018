@@ -7,6 +7,19 @@ import unittest
 
 
 def get_titles_from_search_results(filename):
+    o = open(filename)
+    r = o.read()
+    soup = BeautifulSoup(r, 'html.parser')
+    titles = soup.find_all('a', class_ = "bookTitle")
+    new_titles = titles.find_all('span', itemprop = "name")
+    authors = soup.find_all("a", class_ = "authorName")
+    new_authors = authors.find_all('span', itemprop = "name")
+
+    new = []
+    for i in range(len(new_titles)):
+        ap = (new_titles.text[i], new_authors.text[i])
+        new.append(ap)
+    return new 
     """
     Write a function that creates a BeautifulSoup object on "search_results.htm". Parse
     through the object and return a list of tuples containing book titles (as printed on the Goodreads website) 
@@ -15,7 +28,7 @@ def get_titles_from_search_results(filename):
     [('Book title 1', 'Author 1'), ('Book title 2', 'Author 2')...]
     """
 
-    pass
+    
 
 
 def get_search_links():
