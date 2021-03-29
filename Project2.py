@@ -7,19 +7,31 @@ import unittest
 
 
 def get_titles_from_search_results(filename):
-    o = open(filename)
-    r = o.read()
-    soup = BeautifulSoup(r, 'html.parser')
+    #o = open(filename)
+    #r = o.read()
+    with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename), 'r') as file:
+        filedata = file.read()
+    soup = BeautifulSoup(filedata, 'html.parser')
     titles = soup.find_all('a', class_ = "bookTitle")
-    new_titles = titles.find_all('span', itemprop = "name")
+    titleNames = []
+    for title in titles:
+        titleNames.append(title.text.strip())
+    #new_titles = titles.find_all('span', itemprop = "name")
     authors = soup.find_all("a", class_ = "authorName")
-    new_authors = authors.find_all('span', itemprop = "name")
+    authorsNames = []
+    for author in authors:
+        authorsNames.append(author.text.strip())
+    bookTuples = []
+    for item in range(len(titles)):
+        bookTuples.append((titleNames[item], authorsNames[item]))
+    return bookTuples
+    #new_authors = authors.find_all('span', itemprop = "name")
 
-    new = []
-    for i in range(len(new_titles)):
-        ap = (new_titles.text[i], new_authors.text[i])
-        new.append(ap)
-    return new 
+    #new = []
+    #for i in range(len(new_titles)):
+        #ap = (new_titles.text[i], new_authors.text[i])
+        #new.append(ap)
+    #return new 
     """
     Write a function that creates a BeautifulSoup object on "search_results.htm". Parse
     through the object and return a list of tuples containing book titles (as printed on the Goodreads website) 
@@ -44,6 +56,16 @@ def get_search_links():
     “https://www.goodreads.com/book/show/kdkd".
 
     """
+    url = "https://www.goodreads.com/search?q=fantasy&qid=NwUsLiA2Nc"
+    info = requests.get(url)
+    soup = BeautifulSoup(info.content, 'html.parser')
+    bookNames = soup.find_all('a', class_ = 'bookTitle')
+    new_list = []
+    for title in bookNames:
+        link = title.get('href')
+        new_list.append("https://www.goodreads.com/book/show/" + link)
+        #print(new_list[0])
+    return new_list[:10]
 
     pass
 
@@ -118,7 +140,8 @@ class TestCases(unittest.TestCase):
 
     def test_get_titles_from_search_results(self):
         # call get_titles_from_search_results() on search_results.htm and save to a local variable
-
+        results = get_titles_from_search_results('search_results.htm')
+        print(results)
         # check that the number of titles extracted is correct (20 titles)
 
         # check that the variable you saved after calling the function is a list
@@ -129,7 +152,7 @@ class TestCases(unittest.TestCase):
 
         # check that the last title is correct (open search_results.htm and find it)
 
-    def test_get_search_links(self):
+    #def test_get_search_links(self):
         # check that TestCases.search_urls is a list
 
         # check that the length of TestCases.search_urls is correct (10 URLs)
@@ -139,7 +162,7 @@ class TestCases(unittest.TestCase):
         # check that each URL contains the correct url for Goodreads.com followed by /book/show/
 
 
-    def test_get_book_summary(self):
+    #def test_get_book_summary(self):
         # create a local variable – summaries – a list containing the results from get_book_summary()
         # for each URL in TestCases.search_urls (should be a list of tuples)
 
@@ -156,7 +179,7 @@ class TestCases(unittest.TestCase):
             # check that the first book in the search has 337 pages
 
 
-    def test_summarize_best_books(self):
+    #def test_summarize_best_books(self):
         # call summarize_best_books and save it to a variable
 
         # check that we have the right number of best books (20)
@@ -170,7 +193,7 @@ class TestCases(unittest.TestCase):
         # check that the last tuple is made up of the following 3 strings: 'Picture Books', 'Antiracist Baby', 'https://www.goodreads.com/choiceawards/best-picture-books-2020'
 
 
-    def test_write_csv(self):
+    #def test_write_csv(self):
         # call get_titles_from_search_results on search_results.htm and save the result to a variable
 
         # call write csv on the variable you saved and 'test.csv'
@@ -188,9 +211,9 @@ class TestCases(unittest.TestCase):
 
 
 
-if __name__ == '__main__':
-    print(extra_credit("extra_credit.htm"))
-    unittest.main(verbosity=2)
+#if __name__ == '__main__':
+    #print(extra_credit("extra_credit.htm"))
+    #unittest.main(verbosity=2)
 
 
 
