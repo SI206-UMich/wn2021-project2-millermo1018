@@ -25,13 +25,6 @@ def get_titles_from_search_results(filename):
     for item in range(len(titles)):
         bookTuples.append((titleNames[item], authorsNames[item]))
     return bookTuples
-    #new_authors = authors.find_all('span', itemprop = "name")
-
-    #new = []
-    #for i in range(len(new_titles)):
-        #ap = (new_titles.text[i], new_authors.text[i])
-        #new.append(ap)
-    #return new 
     """
     Write a function that creates a BeautifulSoup object on "search_results.htm". Parse
     through the object and return a list of tuples containing book titles (as printed on the Goodreads website) 
@@ -67,7 +60,6 @@ def get_search_links():
         #print(new_list[0])
     return new_list[:10]
 
-    pass
 
 
 def get_book_summary(book_url):
@@ -136,21 +128,29 @@ def extra_credit(filepath):
 class TestCases(unittest.TestCase):
 
     # call get_search_links() and save it to a static variable: search_urls
+    search_urls = get_search_links()
 
 
     def test_get_titles_from_search_results(self):
         # call get_titles_from_search_results() on search_results.htm and save to a local variable
-        results = get_titles_from_search_results('search_results.htm')
-        print(results)
+        search = get_titles_from_search_results('search_results.htm')
+        #print(results)
         # check that the number of titles extracted is correct (20 titles)
+        self.assertEqual(len(search), 20)
 
         # check that the variable you saved after calling the function is a list
+        self.assertEqual(type(search), list)
 
         # check that each item in the list is a tuple
+        for item in search:
+            self.assertEqual(type(item), tuple)
 
         # check that the first book and author tuple is correct (open search_results.htm and find it)
+        #self.assertEqual(search[0], ("Harry Potter and the Deathly Hallows (Harry Potter, #7)", "J.K")
+        #FINISH THIS ONE
 
         # check that the last title is correct (open search_results.htm and find it)
+        self.assertEqual(search[-1][0], "Harry Potter : The Prequel (Harry Potter, #0.5)")
 
     #def test_get_search_links(self):
         # check that TestCases.search_urls is a list
@@ -214,6 +214,5 @@ class TestCases(unittest.TestCase):
 #if __name__ == '__main__':
     #print(extra_credit("extra_credit.htm"))
     #unittest.main(verbosity=2)
-
 
 
