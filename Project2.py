@@ -7,8 +7,14 @@ import unittest
 
 
 def get_titles_from_search_results(filename):
-    #o = open(filename)
-    #r = o.read()
+
+    """
+    Write a function that creates a BeautifulSoup object on "search_results.htm". Parse
+    through the object and return a list of tuples containing book titles (as printed on the Goodreads website) 
+    and authors in the format given below. Make sure to strip() any newlines from the book titles and author names.
+
+    [('Book title 1', 'Author 1'), ('Book title 2', 'Author 2')...]
+    """
     with open(os.path.join(os.path.abspath(os.path.dirname(__file__)), filename), 'r') as file:
         filedata = file.read()
     soup = BeautifulSoup(filedata, 'html.parser')
@@ -25,13 +31,6 @@ def get_titles_from_search_results(filename):
     for item in range(len(titles)):
         bookTuples.append((titleNames[item], authorsNames[item]))
     return bookTuples
-    """
-    Write a function that creates a BeautifulSoup object on "search_results.htm". Parse
-    through the object and return a list of tuples containing book titles (as printed on the Goodreads website) 
-    and authors in the format given below. Make sure to strip() any newlines from the book titles and author names.
-
-    [('Book title 1', 'Author 1'), ('Book title 2', 'Author 2')...]
-    """
 
     
 
@@ -75,8 +74,16 @@ def get_book_summary(book_url):
     You can easily capture CSS selectors with your browser's inspector window.
     Make sure to strip() any newlines from the book title and number of pages.
     """
+    book = requests.get(book_url)
+    soup = BeautifulSoup(book.content, 'html.parser')
+    bookTitles = soup.find('h1', class_="gr-h1 gr-h1--serif").text.strip()
+    Author_name = soup.find('a', class_="authorName").text.strip()
+    num_pages = int(soup.find('span', itemprop="numberOfPages").text.strip()[:3])
+    return (bookTitles, Author_name, num_pages)
 
-    pass
+
+
+    #pass
 
 
 def summarize_best_books(filepath):
@@ -147,19 +154,25 @@ class TestCases(unittest.TestCase):
 
         # check that the first book and author tuple is correct (open search_results.htm and find it)
         self.assertEqual(search[0], ("Harry Potter and the Deathly Hallows (Harry Potter, #7)", "J.K. Rowling"))
-        #FINISH THIS ONE
 
         # check that the last title is correct (open search_results.htm and find it)
         self.assertEqual(search[-1][0], "Harry Potter: The Prequel (Harry Potter, #0.5)")
 
-    #def test_get_search_links(self):
+    def test_get_search_links(self):
         # check that TestCases.search_urls is a list
+        self.assertEqual(type(TestCases.search_urls), list)
 
         # check that the length of TestCases.search_urls is correct (10 URLs)
-
+        self.assertEqual(len(TestCases.search_urls), 10)
 
         # check that each URL in the TestCases.search_urls is a string
+        #self.assertEqual(type(TestCases.search_urls), str)
+
         # check that each URL contains the correct url for Goodreads.com followed by /book/show/
+        #self.assertEqual(search("https://www.goodreads.com"))
+        for i in TestCases.search_urls:
+            self.assertEqual(type(i), str)
+            self.assertTrue("https://www.goodreads.com/book/show/" in i)
 
 
     #def test_get_book_summary(self):
