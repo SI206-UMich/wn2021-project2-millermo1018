@@ -56,7 +56,7 @@ def get_search_links():
     new_list = []
     for title in bookNames:
         link = title.get('href')
-        new_list.append("https://www.goodreads.com/book/show/" + link)
+        new_list.append("https://www.goodreads.com" + link)
         #print(new_list[0])
     return new_list[:10]
 
@@ -146,11 +146,11 @@ class TestCases(unittest.TestCase):
             self.assertEqual(type(item), tuple)
 
         # check that the first book and author tuple is correct (open search_results.htm and find it)
-        #self.assertEqual(search[0], ("Harry Potter and the Deathly Hallows (Harry Potter, #7)", "J.K")
+        self.assertEqual(search[0], ("Harry Potter and the Deathly Hallows (Harry Potter, #7)", "J.K. Rowling"))
         #FINISH THIS ONE
 
         # check that the last title is correct (open search_results.htm and find it)
-        self.assertEqual(search[-1][0], "Harry Potter : The Prequel (Harry Potter, #0.5)")
+        self.assertEqual(search[-1][0], "Harry Potter: The Prequel (Harry Potter, #0.5)")
 
     #def test_get_search_links(self):
         # check that TestCases.search_urls is a list
@@ -211,8 +211,8 @@ class TestCases(unittest.TestCase):
 
 
 
-#if __name__ == '__main__':
+if __name__ == '__main__':
     #print(extra_credit("extra_credit.htm"))
-    #unittest.main(verbosity=2)
+    unittest.main(verbosity=2)
 
 
