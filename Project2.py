@@ -102,17 +102,13 @@ def summarize_best_books(filepath):
     soup = BeautifulSoup(filedata, 'html.parser')
     categories = soup.find_all('h4', class_='category__copy')
     for cat in categories:
-        cat_list.append(category.text.strip())
+        cat_list.append(categories.text.strip())
     
     booktitles = soup.find_all('div', class_='category__winnerImageContainer')
     for book in booktitles:
         for name in book.find_all('img', alt = True):
             book_list.append(name['alt'])
-    print(book_list)
-
-    #use findall and loop through each tuple
-
-    #pass
+    #print(book_list)
 
 
 def write_csv(data, filename):
@@ -222,20 +218,21 @@ class TestCases(unittest.TestCase):
         self.assertEqual(summaries[0][2], 337)
 
 
-    #def test_summarize_best_books(self):
+    def test_summarize_best_books(self):
         # call summarize_best_books and save it to a variable
-        searchResults = summarize_best_books
+        search_results = summarize_best_books('best_books_2020.htm')
         # check that we have the right number of best books (20)
-        self.assertEqual(len(summaries), 20)
-
+        self.assertEqual(len(search_results), 20)
+        for search in search_results:
             # assert each item in the list of best books is a tuple
-
+            self.assertEqual(type(search), tuple)
             # check that each tuple has a length of 3
+            self.assertEqual(len(search), 3)
 
         # check that the first tuple is made up of the following 3 strings:'Fiction', "The Midnight Library", 'https://www.goodreads.com/choiceawards/best-fiction-books-2020'
-
+        self.assertEqual(search_results[0],('Fiction', "The Midnight Library", 'https://www.goodreads.com/choiceawards/best-fiction-books-2020' ))
         # check that the last tuple is made up of the following 3 strings: 'Picture Books', 'Antiracist Baby', 'https://www.goodreads.com/choiceawards/best-picture-books-2020'
-
+        self.assertEqual(search_results[-1], ('Picture Books', 'Antiracist Baby','https://www.goodreads.com/choiceawards/best-picture-books-2020' ))
 
     def test_write_csv(self):
         # call get_titles_from_search_results on search_results.htm and save the result to a variable
